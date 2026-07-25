@@ -25,9 +25,7 @@ namespace ai_chat_sdk
         Config &get_model_setting();
     private:
         //初始化默认设置
-        void init_config(){
-            
-        }
+        void init_config();
 
     private:
         std::string name_;
