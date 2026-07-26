@@ -46,18 +46,6 @@ namespace ai_chat_sdk
 
         // 打印调试
         void print_all() const;
-
-    private:
-        // 请求头
-        // 服务器地址
-        std::string endpoint_;
-        // api_path
-        std::string api_path_;
-        // aip_key
-        std::string api_key_;
-
-        // 请求body
-        // Json数据
-        Json::Value data_;
+        
     };
 }
