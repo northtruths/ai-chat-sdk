@@ -45,6 +45,9 @@ namespace ai_chat_sdk
         virtual void set_stream(bool stream);
         virtual bool get_stream() const;
 
+        virtual void set_model_desc(const std::string &desc);
+        virtual std::string get_model_desc() const;
+
         // 消息管理
         virtual void add_message(const std::string &role, const std::string &content) = 0;
         virtual void clear_messages() = 0;
@@ -68,5 +71,8 @@ namespace ai_chat_sdk
         // 请求body
         // Json数据
         Json::Value data_;
+
+        // 模型描述
+        std::string desc_;
     };
 }
