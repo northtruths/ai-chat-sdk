@@ -42,6 +42,28 @@ namespace ai_chat_sdk
         // 消息数组（空）
         data_["messages"] = Json::Value(Json::arrayValue);
     }
+    // 设置模型完整URL
+    void DeepSeekConfig::set_url(const std::string &endpoint, const std::string &path){
+        endpoint_ = endpoint;
+        api_path_ = path;
+    }
+    // 获取服务器地址
+    std::string DeepSeekConfig::get_endpoint(){
+        return endpoint_;
+    }
+    // 获取模型具体路径
+    std::string DeepSeekConfig::get_path(){
+        return api_path_;
+    }
+
+    // 设置API_KEY
+    void DeepSeekConfig::set_api_key(const std::string &api_key){
+        api_key_ = api_key;
+    }
+    // 获取API_KEY
+    std::string DeepSeekConfig::get_api_key(){
+        return api_key_;
+    }
 
     // 通用设置接口
     bool DeepSeekConfig::set(const std::string &key, const Json::Value &value)
