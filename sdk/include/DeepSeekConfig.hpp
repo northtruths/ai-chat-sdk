@@ -1,0 +1,61 @@
+#pragma once
+
+#include "BaseConfig.hpp"
+#include <jsoncpp/json/json.h>
+#include <string>
+#include <iostream>
+
+namespace ai_chat_sdk
+{
+    class DeepSeekConfig : public BaseConfig
+    {
+    public:
+        // 构造函数
+        DeepSeekConfig();
+
+        // 初始化默认设置
+        void init_defaults();
+
+        // 通用设置接口
+        bool set(const std::string &key, const Json::Value &value);
+        Json::Value get(const std::string &key) const;
+
+        // 便捷化接口
+        void set_model(const std::string &model);
+        std::string get_model() const;
+
+        void set_temperature(double temp);
+        double get_temperature() const;
+
+        void set_max_tokens(int tokens);
+        int get_max_tokens() const;
+
+        void set_stream(bool stream);
+        bool get_stream() const;
+
+        // 消息管理
+        void add_message(const std::string &role, const std::string &content);
+        void clear_messages();
+        Json::Value get_messages() const;
+
+        // 返回整个Json
+        const Json::Value &asJson() const;
+
+        // 打印调试
+        void print_all() const;
+
+    private:
+        // 请求头
+        // 服务器地址
+        std::string endpoint_;
+        // api_path
+        std::string api_path_;
+        // aip_key
+        std::string api_key_;
+
+        // 请求body
+        // Json数据
+        Json::Value data_;
+
+    };
+}
