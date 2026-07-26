@@ -1,10 +1,11 @@
+//模型参数配置抽象基类
 #pragma once
 
 #include "utils/logger.hpp"
 #include <jsoncpp/json/json.h>
 #include <string>
 
-using namespace log;
+using namespace mylog;
 
 namespace ai_chat_sdk
 {
@@ -19,7 +20,7 @@ namespace ai_chat_sdk
         // 设置模型完整URL
         virtual void set_url(const std::string &endpoint, const std::string &path) = 0;
         // 获取服务器地址
-        virtual std::string get_enpoint() = 0;
+        virtual std::string get_endpoint() = 0;
         // 获取模型具体路径
         virtual std::string get_path() = 0;
 
@@ -33,20 +34,20 @@ namespace ai_chat_sdk
         virtual Json::Value get(const std::string &key) const = 0;
 
         // 便捷化接口
-        virtual void set_model(const std::string &model);
-        virtual std::string get_model() const;
+        virtual void set_model(const std::string &model) = 0;
+        virtual std::string get_model() const = 0;
 
-        virtual void set_temperature(double temp);
-        virtual double get_temperature() const;
+        virtual void set_temperature(double temp) = 0;
+        virtual double get_temperature() const = 0;
 
-        virtual void set_max_tokens(int tokens);
-        virtual int get_max_tokens() const;
+        virtual void set_max_tokens(int tokens) = 0;
+        virtual int get_max_tokens() const = 0;
 
-        virtual void set_stream(bool stream);
-        virtual bool get_stream() const;
+        virtual void set_stream(bool stream) = 0;
+        virtual bool get_stream() const = 0;
 
-        virtual void set_model_desc(const std::string &desc);
-        virtual std::string get_model_desc() const;
+        virtual void set_model_desc(const std::string &desc) = 0;
+        virtual std::string get_model_desc() const = 0;
 
         // 消息管理
         virtual void add_message(const std::string &role, const std::string &content) = 0;
