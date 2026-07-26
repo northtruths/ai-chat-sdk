@@ -3,7 +3,8 @@
 namespace ai_chat_sdk
 {
     // 构造函数
-    DeepSeekConfig::DeepSeekConfig(){
+    DeepSeekConfig::DeepSeekConfig()
+    {
         init_defaults();
     }
     void DeepSeekConfig::init_defaults()
@@ -42,7 +43,7 @@ namespace ai_chat_sdk
         data_["messages"] = Json::Value(Json::arrayValue);
     }
 
-    // 通用设置接口 
+    // 通用设置接口
     bool DeepSeekConfig::set(const std::string &key, const Json::Value &value)
     {
         if (data_.isMember(key))
@@ -51,7 +52,7 @@ namespace ai_chat_sdk
             return true;
         }
         LOG_WARN_STREAM() << "参数设置失败：不支持 " << key;
-        return false; 
+        return false;
     }
 
     Json::Value DeepSeekConfig::get(const std::string &key) const
@@ -68,7 +69,6 @@ namespace ai_chat_sdk
     {
         set("model", model);
     }
-
     std::string DeepSeekConfig::get_model() const
     {
         return get("model").asString();
@@ -78,7 +78,6 @@ namespace ai_chat_sdk
     {
         set("temperature", temp);
     }
-
     double DeepSeekConfig::get_temperature() const
     {
         return get("temperature").asDouble();
@@ -88,7 +87,6 @@ namespace ai_chat_sdk
     {
         set("max_tokens", tokens);
     }
-
     int DeepSeekConfig::get_max_tokens() const
     {
         return get("max_tokens").asInt();
@@ -98,10 +96,18 @@ namespace ai_chat_sdk
     {
         set("stream", stream);
     }
-
     bool DeepSeekConfig::get_stream() const
     {
         return get("stream").asBool();
+    }
+
+    void DeepSeekConfig::set_model_desc(const std::string &desc)
+    {
+        desc_ = desc;
+    }
+    std::string DeepSeekConfig::get_model_desc() const
+    {
+        return desc_;
     }
 
     // 消息管理
@@ -127,13 +133,13 @@ namespace ai_chat_sdk
         return get("messages");
     }
 
-    //返回整个Json
+    // 返回整个Json
     const Json::Value &DeepSeekConfig::asJson() const
     {
         return data_;
     }
 
-    //打印调试
+    // 打印调试
     void DeepSeekConfig::print_all() const
     {
         auto keys = data_.getMemberNames();

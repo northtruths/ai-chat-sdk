@@ -33,6 +33,9 @@ namespace ai_chat_sdk
         void set_stream(bool stream);
         bool get_stream() const;
 
+        void set_model_desc(const std::string &desc);
+        std::string get_model_desc() const;
+
         // 消息管理
         void add_message(const std::string &role, const std::string &content);
         void clear_messages();
@@ -56,6 +59,5 @@ namespace ai_chat_sdk
         // 请求body
         // Json数据
         Json::Value data_;
-
     };
 }
