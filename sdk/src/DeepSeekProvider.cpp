@@ -2,83 +2,130 @@
 #include "Common.hpp"
 #include "DeepSeekProvider.hpp"
 #include "utils/logger.hpp"
-#include "Message.hpp"
+#include "DeepSeekConfig.hpp"
 #include <string>
 #include <jsoncpp/json/json.h>
+#include <httplib.h>
+#include <sstream>
 
-using namespace log;
+using namespace mylog;
 namespace ai_chat_sdk
 {
-    // 初始化模型
-    bool DeepSeekProvider::init_model(const Config cf)
+    DeepSeekProvider::DeepSeekProvider(BaseConfig *cf)
     {
-        config_ = cf;
-        if (config_.get("name") == std::string())
-        {
-            LOG_ERROR("deepseek初始化模型失败：未指定模型名称");
-            return false;
-        }
-        else
-        {
-            name_ = config_.get("name");
-        }
+        init_model(cf);
+    }
 
-        if (cf.get("endpoint") == std::string())
+    // 初始化模型
+    bool DeepSeekProvider::init_model(BaseConfig *cf)
+    {
+        if (is_available_)
         {
-            LOG_ERROR("deepseek初始化模型失败，未提供模型url");
+            LOG_WARN("模型已经初始化");
             return false;
         }
-        else
-        {
-            endpoint_ = config_.get("endpoint");
-        }
+        config_ = cf;
         is_available_ = true;
-        LOG_INFO("deepseek模型初始化成功");
+        LOG_INFO("(DeepSeek) 模型初始化成功");
         return true;
     }
+
     // 检测模型是否有效
     bool DeepSeekProvider::is_available() const
     {
-        
         return is_available_;
     }
 
     // 获取模型名称
-    std::string DeepSeekProvider::get_model_name() const
+    std::string DeepSeekProvider::get_model() const
     {
-        return name_;
+        return config_->get_model();
     }
     // 获取模型描述
     std::string DeepSeekProvider::get_model_desc() const
     {
-        // 若没有设置描述则为空
-        return config_.get("desc");
+        return config_->get_model_desc();
     }
 
-    // 设置/更改配置参数
-    bool DeepSeekProvider::set_model_params(const Config cf){
-        if(cf.get("name") == std::string() || cf.get("api_key") == std::string()){
-            LOG_WARN("配置参数没有包含必要的 'name' 或 'api_key' ");
-            return false;
-        }
-        config_ = cf;
-        return true;
-    }
-
-    // 获取模型配置信息
-    Config &DeepSeekProvider::get_model_setting()
+    // 更改配置参数
+    bool DeepSeekProvider::set_params(const std::string &key, const Json::Value &value)
     {
-        return config_;
+        return config_->set(key, value);
+    }
+    // 获取模型配置信息
+    Json::Value DeepSeekProvider::get_params(const std::string &key) const
+    {
+        return config_->get(key);
     }
 
     // 全量式发送信息
-    std::string DeepSeekProvider::send_message()
+    std::string DeepSeekProvider::send_message(const std::string content)
     {
-        
+        // 检测模型是否有效
+        if (is_available_ == false)
+        {
+            LOG_ERROR("(DeepSeek) 发送失败！模型无效！");
+            return std::string();
+        }
+
+        // 构建json信息
+        config_->add_message("user", content);
+        Json::Value data = config_->asJson();
+
+        // json序列化
+        Json::FastWriter writer;
+        std::string json_str = writer.write(data);
+
+        // 通过http发送信息
+        httplib::Client client(config_->get_endpoint());
+        client.set_connection_timeout(30); // 给30s连接时间
+        client.set_read_timeout(120);      // 给120s返回时间
+        // 请求报头
+        httplib::Headers headers = {{"Content-Type", "application/json"}, {"Accept", "application/json"}, {"Authorization", "Bearer " + config_->get_api_key()}};
+        auto res = client.Post(config_->get_path(), headers, json_str, "application/json");
+
+        // 获取返回信息并解析
+        // 没有成功响应，解析对应错误
+        if (!res || res->status != 200)
+        {
+
+            LOG_INFO("(DeepSeek) 信息发送失败！原因如下：");
+            //...未完成
+            return std::string();
+        }
+        // 解析返回消息
+        Json::Value resp_json;
+        std::string prase_error;
+        Json::CharReaderBuilder reader;
+        std::istringstream stream(res->body);
+        if (!Json::parseFromStream(reader, stream, &resp_json, &prase_error))
+        {
+            // 返回信息解析失败
+            LOG_ERROR_STREAM() << "(DeepSeek) 返回信息解析失败：" << prase_error;
+            return std::string();
+        }
+        // 返回消息解析成功，解析大模型返回内容
+        {
+            // 严格检查
+            if (resp_json.isMember("choices") && resp_json["choices"].isArray() && !resp_json["choices"].empty())
+            {
+                auto &choice = resp_json["choices"][0];
+                if (choice.isMember("message") && choice.isMember("content"))
+                {
+                    std::string resp_content = choice["content"].asString();
+                    return resp_content;
+                }
+            }
+            // 模型返回信息错误
+            LOG_ERROR("(DeepSeek) 返回信息错误！");
+            return std::string();
+        }
     }
 
-    // 流式发送信息
-    std::string  DeepSeekProvider::send_meesage_stream()
+    //流式发送信息
+    std::string DeepSeekProvider::send_meesage_stream(const std::string content)
     {
+      content;
+      return std::string();
     }
 }
