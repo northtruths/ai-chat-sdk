@@ -1,3 +1,4 @@
+//模型参数配置deepseek类
 #pragma once
 
 #include "BaseConfig.hpp"
@@ -15,6 +16,18 @@ namespace ai_chat_sdk
 
         // 初始化默认设置
         void init_defaults();
+
+        // 设置模型完整URL
+        void set_url(const std::string &endpoint, const std::string &path);
+        // 获取服务器地址
+        std::string get_endpoint();
+        // 获取模型具体路径
+        std::string get_path();
+
+        // 设置API_KEY
+        void set_api_key(const std::string &api_key);
+        // 获取API_KEY
+        std::string get_api_key();
 
         // 通用设置接口
         bool set(const std::string &key, const Json::Value &value);
