@@ -81,7 +81,9 @@ namespace ai_chat_sdk
         client.set_connection_timeout(30); // 给30s连接时间
         client.set_read_timeout(120);      // 给120s返回时间
         // 请求报头
-        httplib::Headers headers = {{"Content-Type", "application/json"}, {"Accept", "application/json"}, {"Authorization", "Bearer " + config_->get_api_key()}};
+        httplib::Headers headers = {{"Content-Type", "application/json"},
+                                    {"Accept", "application/json"},
+                                    {"Authorization", "Bearer " + config_->get_api_key()}};
         auto res = client.Post(config_->get_path(), headers, json_str, "application/json");
 
         // 获取返回信息并解析
@@ -98,7 +100,7 @@ namespace ai_chat_sdk
                 else
                 {
                     // 网络层错误（连接失败、超时等）
-                    LOG_ERROR("(DeepSeek) 信息发送失败！原因如下：网络连接失败，请检查网络或代理设置或者");
+                    LOG_ERROR("(DeepSeek) 信息发送失败！原因如下：网络连接失败，请检查网络或代理设置");
                 }
                 return std::string();
             }
