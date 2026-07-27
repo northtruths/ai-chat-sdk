@@ -88,9 +88,42 @@ namespace ai_chat_sdk
         // 没有成功响应，解析对应错误
         if (!res || res->status != 200)
         {
-
-            LOG_INFO("(DeepSeek) 信息发送失败！原因如下：");
-            //...未完成
+            if (!res)
+            {
+                if (config_->get_endpoint().empty() || config_->get_path().empty())
+                {
+                    // 没有配置好url
+                    LOG_ERROR("(DeepSeek) 信息发送失败！原因如下：URL未配置成功，请配置 endpoint 和 path");
+                }
+                else
+                {
+                    // 网络层错误（连接失败、超时等）
+                    LOG_ERROR("(DeepSeek) 信息发送失败！原因如下：网络连接失败，请检查网络或代理设置或者");
+                }
+                return std::string();
+            }
+            switch (res->status)
+            {
+            case 401:
+                LOG_ERROR("(DeepSeek) 信息发送失败！原因如下：检查 API Key 是否正确或已过期");
+                break;
+            case 403:
+                LOG_ERROR("(DeepSeek) 信息发送失败！原因如下：账户权限不足，或 API Key 无权限访问该模型");
+                break;
+            case 404:
+                LOG_ERROR("(DeepSeek) 信息发送失败！原因如下：检查请求路径是否正确，或模型名称是否存在");
+                break;
+            case 429:
+                LOG_ERROR("(DeepSeek) 信息发送失败！原因如下：请求过于频繁，请稍后重试");
+                break;
+            case 500:
+            case 502:
+            case 503:
+                LOG_ERROR("(DeepSeek) 信息发送失败！原因如下：DeepSeek 服务器内部错误，请稍后重试");
+                break;
+            default:
+                break;
+            }
             return std::string();
         }
         // 解析返回消息
@@ -113,6 +146,7 @@ namespace ai_chat_sdk
                 if (choice.isMember("message") && choice.isMember("content"))
                 {
                     std::string resp_content = choice["content"].asString();
+                    LOG_INFO("(DeepSeek) 信息返回成功");
                     return resp_content;
                 }
             }
@@ -122,10 +156,10 @@ namespace ai_chat_sdk
         }
     }
 
-    //流式发送信息
+    // 流式发送信息
     std::string DeepSeekProvider::send_meesage_stream(const std::string content)
     {
-      content;
-      return std::string();
+        std::string temp = content;
+        return std::string();
     }
 }

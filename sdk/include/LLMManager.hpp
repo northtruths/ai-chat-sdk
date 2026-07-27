@@ -32,7 +32,7 @@ namespace ai_chat_sdk
 
     protected:
         // 模型是否有效（是否初始化）
-        bool is_available_;
+        bool is_available_ = false;
         // 模型的参数
         BaseConfig *config_;
     };
