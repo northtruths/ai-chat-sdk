@@ -128,6 +128,7 @@ namespace ai_chat_sdk
             }
             return std::string();
         }
+        LOG_DEBUG_STREAM() << "DeepSeek 响应体: " << res->body;
         // 解析返回消息
         Json::Value resp_json;
         std::string prase_error;
@@ -145,12 +146,17 @@ namespace ai_chat_sdk
             if (resp_json.isMember("choices") && resp_json["choices"].isArray() && !resp_json["choices"].empty())
             {
                 auto &choice = resp_json["choices"][0];
-                if (choice.isMember("message") && choice.isMember("content"))
+                if (choice.isMember("message") && choice["message"].isMember("content"))
                 {
-                    std::string resp_content = choice["content"].asString();
+                    std::string resp_content = choice["message"]["content"].asString();
                     LOG_INFO("(DeepSeek) 信息返回成功");
+                    LOG_DEBUG_STREAM() << "返回信息为：" << resp_content;
                     return resp_content;
+                }else{
+                    LOG_DEBUG("没有 message 或 没有content");
                 }
+            }else{
+                LOG_DEBUG("没有choices 或 choice 格式内容错误");
             }
             // 模型返回信息错误
             LOG_ERROR("(DeepSeek) 返回信息错误！");
