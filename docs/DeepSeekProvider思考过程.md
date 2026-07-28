@@ -76,3 +76,9 @@ deepseek的完整返回json
     "total_tokens": 25
   }
 }
+
+# 7.27
+全量发送有点BUG，httplib 默认只支持 HTTP，但deepseek只接收HTTPS所以要启用 OpenSSL 支持
+然后 httplib 版本和 OpenSSL 版本不兼容，httplib 太高，降级就行或者 OpenSSL 升级
+咨询AI升级OpenSSL可能影响系统，然后降级了 httplib 代码有些函数又不支持须要更改
+最后安装了 OpenSSL 3.0 通过Makefile增加查找路径
