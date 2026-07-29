@@ -82,3 +82,47 @@ deepseek的完整返回json
 然后 httplib 版本和 OpenSSL 版本不兼容，httplib 太高，降级就行或者 OpenSSL 升级
 咨询AI升级OpenSSL可能影响系统，然后降级了 httplib 代码有些函数又不支持须要更改
 最后安装了 OpenSSL 3.0 通过Makefile增加查找路径
+
+# 7.28
+之前两种方式都试过，但发送还是无法成功，连接不上deepseek
+然后换了种编译方式，使用 CMake 进行自动生成 makefile 然后就行了，然后修复了点代码 bug ，所以之前应该就是编译问题，没有正确链接上 SSL 或某个文件
+
+# 7.29
+流式信息发送 
+和全量一样，不过要给httplib一个回调函数，因为每次接受一点数据，httplib就会调用这个函数，然后它发送的每一段信息都由\n\n结尾？我们就是拼接下来即可
+流式发送数据格式（SEE格式）
+data: {内容}\n\n
+data: {"id":"xxx","choices":[{"delta":{"role":"assistant","content":""},"finish_reason":null}]}
+data: {"id":"xxx","choices":[{"index":0,"delta":{"content":"你"},"finish_reason":null}]}
+data: {"id":"xxx","choices":[{"index":0,"delta":{"content":"好"},"finish_reason":null}]}
+data: {"id":"xxx","choices":[{"index":0,"delta":{"content":"！"},"finish_reason":null}]}
+data: [DONE]
+
+流式响应结构
+{
+  "choices": [{
+    "delta": {           // ← 是 delta，不是 message
+      "content": "你"
+    }
+  }]
+}
+
+实现过程
+1. 检查模型和key有效
+2. 构建json信息（开启 deepseek 的流式响应字段）
+3. json序列化
+4. 创建http客户端(第三方库cpp-httplib)
+5. 等待并获取返回信息
+6. 解析并处理返回信息
+
+两个要点：
+发送请求从函数传参改为构建请求对象更清晰明了，主要是多了两个重要参数
+1. response_handler 响应处理器，在启动流式响应后，服务器会将整个信息拆分，进行流式发送，但 http 报头是一定完整发送的，response_handler 就用来处理响应头，进行快速诊断错误，避免多余处理浪费资源
+ResponseHandler response_handler;//声明
+std::function<void(const Response&)>//实际定义类型，是个函数包装器
+2. content_receiver 内容接收器，在启动流式响应后，服务器会将整个信息拆分，进行流式发送，除了 http 报头，其他的信息都可能是流式、不完整的，同样它是一个函数包装器，开启后给予它回调函数，它会再每次收到内容体时调用回调，以此来处理接收的部分信息体
+ContentReceiverWithProgress content_receiver；//声明
+function<bool(const char* data, size_t len, uint64_t offset, uint64_ttotal)>//实际定义类型
+data是指向当前接收到的数据块的指针，len是当前数据块长度
+offset是当前数据块在请求体中的偏移量，total是请求体的总长度
+返回值为布尔，true表示继续接收(正常连接着)，false表示停止接收(中途有错误，停止发送)
