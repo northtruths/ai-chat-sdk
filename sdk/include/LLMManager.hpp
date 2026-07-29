@@ -5,10 +5,12 @@
 #include <string>
 #include <memory>
 #include <jsoncpp/json/json.h>
+#include <functional>
 
 namespace ai_chat_sdk
 {
-    class Message;
+    using one_chunk = std::function<void(const std::string &, bool)>;
+
     class LLMManager
     {
     public:
@@ -20,7 +22,7 @@ namespace ai_chat_sdk
         // 全量式发送信息
         virtual std::string send_message(const std::string content) = 0;
         // 流式发送信息
-        virtual std::string send_meesage_stream(const std::string content) = 0;
+        virtual std::string send_message_stream(const std::string content, one_chunk callback) = 0;
         // 获取模型名称
         virtual std::string get_model() const = 0;
         // 获取模型描述
