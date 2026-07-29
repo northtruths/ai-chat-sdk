@@ -3,7 +3,7 @@
 #include "LLMManager.hpp"
 
 namespace ai_chat_sdk
-{
+{    
     class DeepSeekProvider : public LLMManager
     {
     public:
@@ -17,7 +17,7 @@ namespace ai_chat_sdk
         // 全量式发送信息
         std::string send_message(const std::string content);
         // 流式发送信息
-        std::string send_meesage_stream(const std::string content);
+        std::string send_message_stream(const std::string content, one_chunk callback);
         // 获取模型名称
         std::string get_model() const;
         // 获取模型描述
