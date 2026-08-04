@@ -11,10 +11,10 @@ namespace ai_chat_sdk
 {
     using one_chunk = std::function<void(const std::string &, bool)>;
 
-    class LLMManager
+    class LLMProvider
     {
     public:
-        virtual ~LLMManager() = default;
+        virtual ~LLMProvider() = default;
         // 初始化模型
         virtual bool init_model(BaseConfig *cf) = 0;
         // 检测模型是否有效

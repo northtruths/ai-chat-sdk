@@ -4,7 +4,7 @@
 
 namespace ai_chat_sdk
 {    
-    class OllamaProvider : public LLMManager
+    class OllamaProvider : public LLMProvider
     {
     public:
         // 构造函数，可以构造时传配置直接初始化
