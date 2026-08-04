@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LLMManager.hpp"
+#include "LLMProvider.hpp"
 
 namespace ai_chat_sdk
 {    

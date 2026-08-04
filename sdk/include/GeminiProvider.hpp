@@ -4,12 +4,12 @@
 
 namespace ai_chat_sdk
 {    
-    class DeepSeekProvider : public LLMManager
+    class GeminiProvider : public LLMManager
     {
     public:
         // 构造函数，可以构造时传配置直接初始化
-        DeepSeekProvider() = default;
-        DeepSeekProvider(BaseConfig *cf);
+        GeminiProvider() = default;
+        GeminiProvider(BaseConfig *cf);
         // 初始化模型
         bool init_model(BaseConfig *cf);
         // 检测模型是否有效
