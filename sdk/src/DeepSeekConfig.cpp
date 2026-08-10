@@ -42,26 +42,32 @@ namespace ai_chat_sdk
         // 消息数组（空）
         data_["messages"] = Json::Value(Json::arrayValue);
     }
+
     // 设置模型完整URL
-    void DeepSeekConfig::set_url(const std::string &endpoint, const std::string &path){
+    void DeepSeekConfig::set_url(const std::string &endpoint, const std::string &path)
+    {
         endpoint_ = endpoint;
         api_path_ = path;
     }
     // 获取服务器地址
-    std::string DeepSeekConfig::get_endpoint(){
+    std::string DeepSeekConfig::get_endpoint()
+    {
         return endpoint_;
     }
     // 获取模型具体路径
-    std::string DeepSeekConfig::get_path(){
+    std::string DeepSeekConfig::get_path()
+    {
         return api_path_;
     }
 
     // 设置API_KEY
-    void DeepSeekConfig::set_api_key(const std::string &api_key){
+    void DeepSeekConfig::set_api_key(const std::string &api_key)
+    {
         api_key_ = api_key;
     }
     // 获取API_KEY
-    std::string DeepSeekConfig::get_api_key(){
+    std::string DeepSeekConfig::get_api_key()
+    {
         return api_key_;
     }
 
@@ -134,16 +140,18 @@ namespace ai_chat_sdk
     }
 
     // 消息管理
-    void DeepSeekConfig::add_message(const std::string &role, const std::string &content)
+    void DeepSeekConfig::set_messages(const std::vector<Message> &messages)
     {
-        if (!data_.isMember("messages") || !data_["messages"].isArray())
+        //每次发送信息都是全部发送，因此要清空之前的记录避免重复
+        data_["messages"] = Json::Value(Json::arrayValue);
+
+        for (auto &message : messages)
         {
-            data_["messages"] = Json::Value(Json::arrayValue);
+            Json::Value msg;
+            msg["role"] = message.role_;
+            msg["content"] = message.content_;
+            data_["messages"].append(msg);
         }
-        Json::Value msg;
-        msg["role"] = role;
-        msg["content"] = content;
-        data_["messages"].append(msg);
     }
 
     void DeepSeekConfig::clear_messages()

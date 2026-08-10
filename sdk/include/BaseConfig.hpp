@@ -2,8 +2,10 @@
 #pragma once
 
 #include "utils/logger.hpp"
+#include "Session.hpp"
 #include <jsoncpp/json/json.h>
 #include <string>
+#include <vector>
 
 using namespace mylog;
 
@@ -50,7 +52,7 @@ namespace ai_chat_sdk
         virtual std::string get_model_desc() const = 0;
 
         // 消息管理
-        virtual void add_message(const std::string &role, const std::string &content) = 0;
+        virtual void set_messages(const std::vector<Message> &messages) = 0;
         virtual void clear_messages() = 0;
         virtual Json::Value get_messages() const = 0;
 

@@ -13,53 +13,17 @@
 using namespace mylog;
 namespace ai_chat_sdk
 {
-    void log_error_code(int code)
+    DeepSeekProvider::DeepSeekProvider(std::unique_ptr<BaseConfig> cf)
     {
-        switch (code)
-        {
-        case 0:
-            LOG_INFO("状态码未被更改过");
-        case 400:
-            LOG_ERROR("(DeepSeek) 信息发送失败！error：400；原因如下：请求格式有问题");
-            break;
-        case 401:
-            LOG_ERROR("(DeepSeek) 信息发送失败！error：401；原因如下：检查 API Key 是否正确或已过期");
-            break;
-        case 403:
-            LOG_ERROR("(DeepSeek) 信息发送失败！error：403；原因如下：账户权限不足，或 API Key 无权限访问该模型");
-            break;
-        case 404:
-            LOG_ERROR("(DeepSeek) 信息发送失败！error：404；原因如下：检查请求路径是否正确，或模型名称是否存在");
-            break;
-        case 429:
-            LOG_ERROR("(DeepSeek) 信息发送失败！error：429；原因如下：请求过于频繁，请稍后重试");
-            break;
-        case 500:
-        case 502:
-        case 503:
-            LOG_ERROR("(DeepSeek) 信息发送失败！error：503；原因如下：DeepSeek 服务器内部错误，请稍后重试");
-            break;
-        default:
-            LOG_ERROR_STREAM() << "未知错误, 状态码为: " << code;
-        }
+        set_model(std::move(cf));
     }
 
-    DeepSeekProvider::DeepSeekProvider(BaseConfig *cf)
+    // 设置模型配置
+    bool DeepSeekProvider::set_model(std::unique_ptr<BaseConfig> cf)
     {
-        init_model(cf);
-    }
-
-    // 初始化模型
-    bool DeepSeekProvider::init_model(BaseConfig *cf)
-    {
-        if (is_available_)
-        {
-            LOG_WARN("模型已经初始化");
-            return false;
-        }
-        config_ = cf;
+        config_ = std::move(cf);
         is_available_ = true;
-        LOG_INFO("(DeepSeek) 模型初始化成功");
+        LOG_INFO("(DeepSeek) 模型配置设置成功");
         return true;
     }
 
@@ -74,25 +38,21 @@ namespace ai_chat_sdk
     {
         return config_->get_model();
     }
+
     // 获取模型描述
     std::string DeepSeekProvider::get_model_desc() const
     {
         return config_->get_model_desc();
     }
 
-    // 更改配置参数
-    bool DeepSeekProvider::set_params(const std::string &key, const Json::Value &value)
-    {
-        return config_->set(key, value);
-    }
-    // 获取模型配置信息
+    // 获取模型参数信息
     Json::Value DeepSeekProvider::get_params(const std::string &key) const
     {
         return config_->get(key);
     }
 
     // 全量式发送信息
-    std::string DeepSeekProvider::send_message(const std::string content)
+    std::string DeepSeekProvider::send_message(const std::vector<Message> &messages)
     {
         // 检测模型是否有效
         if (is_available_ == false)
@@ -102,13 +62,14 @@ namespace ai_chat_sdk
         }
 
         // 构建json信息
-        config_->add_message("user", content);
+        config_->set_messages(messages);
         config_->set_stream(false);
         Json::Value data = config_->asJson();
 
         // json序列化
         Json::FastWriter writer;
         std::string send_json_str = writer.write(data);
+        LOG_DEBUG_STREAM() << "(deepseek) 发送信息json串为: " << send_json_str;
 
         // 通过http发送信息
         httplib::Client client(config_->get_endpoint());
@@ -118,6 +79,8 @@ namespace ai_chat_sdk
         httplib::Headers headers = {{"Content-Type", "application/json"},
                                     {"Accept", "application/json"},
                                     {"Authorization", "Bearer " + config_->get_api_key()}};
+        
+        
         auto res = client.Post(config_->get_path(), headers, send_json_str, "application/json");
 
         // 获取返回信息并解析
@@ -137,8 +100,9 @@ namespace ai_chat_sdk
                     LOG_ERROR("(DeepSeek) 信息发送失败！原因如下：网络连接失败，请检查网络或代理设置");
                 }
                 return std::string();
+            }else{
+                log_error_code(res->status);
             }
-            log_error_code(res->status);
             return std::string();
         }
         LOG_DEBUG_STREAM() << "DeepSeek 响应体: " << res->body;
@@ -163,8 +127,7 @@ namespace ai_chat_sdk
                 {
                     std::string resp_content = choice["message"]["content"].asString();
                     LOG_INFO("(DeepSeek) 信息返回成功");
-                    // 将返回信息存入历史信息中
-                    config_->add_message("assistant", resp_content);
+                    LOG_DEBUG_STREAM() << "返回信息为: " << resp_content;
                     return resp_content;
                 }
                 else
@@ -183,7 +146,7 @@ namespace ai_chat_sdk
     }
 
     // 流式发送信息
-    std::string DeepSeekProvider::send_message_stream(const std::string content, one_chunk callback)
+    std::string DeepSeekProvider::send_message_stream(const std::vector<Message> &messages, one_chunk callback)
     {
         // 检测模型是否有效
         if (is_available_ == false)
@@ -193,7 +156,7 @@ namespace ai_chat_sdk
         }
 
         // 构建json信息
-        config_->add_message("user", content);
+        config_->set_messages(messages);
         config_->set_stream(true);
         Json::Value data = config_->asJson();
 
@@ -329,8 +292,6 @@ namespace ai_chat_sdk
             return std::string();
         }
         LOG_INFO("完整信息发送完毕");
-        //将完整返回信息存入历史信息中
-        config_->add_message("assistant", full_content);
         return full_content;
     }
 }

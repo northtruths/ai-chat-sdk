@@ -50,7 +50,7 @@ namespace ai_chat_sdk
         std::string get_model_desc() const;
 
         // 消息管理
-        void add_message(const std::string &role, const std::string &content);
+        void set_messages(const std::vector<Message> &messages);
         void clear_messages();
         Json::Value get_messages() const;
 
