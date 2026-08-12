@@ -143,7 +143,7 @@ namespace ai_chat_sdk
     void DeepSeekConfig::set_messages(const std::vector<Message> &messages)
     {
         //每次发送信息都是全部发送，因此要清空之前的记录避免重复
-        data_["messages"] = Json::Value(Json::arrayValue);
+        clear_messages();
 
         for (auto &message : messages)
         {
