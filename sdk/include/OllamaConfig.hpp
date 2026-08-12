@@ -25,7 +25,7 @@ namespace ai_chat_sdk
         std::string get_path();
 
         // 设置API_KEY，ollama不需要所以空处理
-        void set_api_key(const std::string &api_key){};
+        void set_api_key(const std::string &api_key){(void)api_key;};
         // 获取API_KEY
         std::string get_api_key(){return std::string();};
 
@@ -50,15 +50,12 @@ namespace ai_chat_sdk
         std::string get_model_desc() const;
 
         // 消息管理
-        void add_message(const std::string &role, const std::string &content);
+        void set_messages(const std::vector<Message> &messages);
         void clear_messages();
         Json::Value get_messages() const;
 
         // 返回整个Json
         const Json::Value &asJson() const;
-
-        // 打印调试
-        void print_all() const;
         
     };
 }

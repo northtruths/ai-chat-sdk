@@ -12,7 +12,7 @@ namespace ai_chat_sdk
         // 模型名
         data_["model"] = "deepseek-r1:1.5b";
 
-        //data_["think"] = false;
+        // data_["think"] = false;
 
         // 生成控制
         data_["temperature"] = 0.7;
@@ -108,16 +108,16 @@ namespace ai_chat_sdk
     }
 
     // 消息管理
-    void OllamaConfig::add_message(const std::string &role, const std::string &content)
+    void OllamaConfig::set_messages(const std::vector<Message> &messages)
     {
-        if (!data_.isMember("messages") || !data_["messages"].isArray())
+        clear_messages();
+        for (auto &message : messages)
         {
-            data_["messages"] = Json::Value(Json::arrayValue);
+            Json::Value msg;
+            msg["role"] = message.role_;
+            msg["content"] = message.content_;
+            data_["messages"].append(msg);
         }
-        Json::Value msg;
-        msg["role"] = role;
-        msg["content"] = content;
-        data_["messages"].append(msg);
     }
 
     void OllamaConfig::clear_messages()
@@ -134,16 +134,5 @@ namespace ai_chat_sdk
     const Json::Value &OllamaConfig::asJson() const
     {
         return data_;
-    }
-
-    // 打印调试
-    void OllamaConfig::print_all() const
-    {
-        auto keys = data_.getMemberNames();
-        for (const auto &key : keys)
-        {
-            const auto &value = data_[key];
-            std::cout << key << " = " << value.toStyledString() << std::endl;
-        }
     }
 }

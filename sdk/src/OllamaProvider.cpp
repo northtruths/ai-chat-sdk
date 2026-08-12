@@ -12,20 +12,20 @@
 using namespace mylog;
 namespace ai_chat_sdk
 {
-    OllamaProvider::OllamaProvider(BaseConfig *cf)
+    OllamaProvider::OllamaProvider(std::unique_ptr<BaseConfig> cf)
     {
-        init_model(cf);
+        set_model(std::move(cf));
     }
 
-    // 初始化模型
-    bool OllamaProvider::init_model(BaseConfig *cf)
+    // 设置模型配置
+    bool OllamaProvider::set_model(std::unique_ptr<BaseConfig> cf)
     {
         if (is_available_)
         {
             LOG_WARN("模型已经初始化");
             return false;
         }
-        config_ = cf;
+        config_ = std::move(cf);
         is_available_ = true;
         LOG_INFO("(Ollama) 模型初始化成功");
         return true;
@@ -48,11 +48,6 @@ namespace ai_chat_sdk
         return config_->get_model_desc();
     }
 
-    // 更改配置参数
-    bool OllamaProvider::set_params(const std::string &key, const Json::Value &value)
-    {
-        return config_->set(key, value);
-    }
     // 获取模型配置信息
     Json::Value OllamaProvider::get_params(const std::string &key) const
     {
@@ -60,7 +55,7 @@ namespace ai_chat_sdk
     }
 
     // 全量式发送信息
-    std::string OllamaProvider::send_message(const std::string content)
+    std::string OllamaProvider::send_message(const std::vector<Message> &messages)
     {
         // 检测模型是否有效
         if (is_available_ == false)
@@ -70,7 +65,7 @@ namespace ai_chat_sdk
         }
 
         // 构建json信息
-        config_->add_message("user", content);
+        config_->set_messages(messages);
         config_->set_stream(false);
         Json::Value data = config_->asJson();
 
@@ -137,8 +132,6 @@ namespace ai_chat_sdk
                 {
                     std::string resp_content = resp_json["message"]["content"].asString();
                     LOG_INFO("(Ollama) 信息返回成功");
-                    // 将返回信息存入历史信息中
-                    config_->add_message("assistant", resp_content);
                     return resp_content;
                 }
                 else
@@ -152,7 +145,7 @@ namespace ai_chat_sdk
     }
 
     // 流式发送信息
-    std::string OllamaProvider::send_message_stream(const std::string content, one_chunk callback)
+    std::string OllamaProvider::send_message_stream(const std::vector<Message> &messages, one_chunk callback)
     {
         // 检测模型是否有效
         if (is_available_ == false)
@@ -162,7 +155,7 @@ namespace ai_chat_sdk
         }
 
         // 构建json信息
-        config_->add_message("user", content);
+        config_->set_messages(messages);
         config_->set_stream(true);
         Json::Value data = config_->asJson();
 
@@ -296,8 +289,6 @@ namespace ai_chat_sdk
             return std::string();
         }
         LOG_INFO("完整信息发送完毕");
-        // 将完整返回信息存入历史信息中
-        config_->add_message("assistant", full_content);
         return full_content;
     }
 }
