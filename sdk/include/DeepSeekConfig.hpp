@@ -56,9 +56,5 @@ namespace ai_chat_sdk
 
         // 返回整个Json
         const Json::Value &asJson() const;
-
-        // 打印调试
-        void print_all() const;
-        
     };
 }

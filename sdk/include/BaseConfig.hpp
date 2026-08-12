@@ -58,10 +58,6 @@ namespace ai_chat_sdk
 
         // 获取完整Json Body
         virtual const Json::Value &asJson() const = 0;
-
-        // 打印Json Body（调试）
-        virtual void print_all() const = 0;
-
     protected:
         // 请求头
         // 服务器地址

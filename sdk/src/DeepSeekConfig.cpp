@@ -169,15 +169,4 @@ namespace ai_chat_sdk
     {
         return data_;
     }
-
-    // 打印调试
-    void DeepSeekConfig::print_all() const
-    {
-        auto keys = data_.getMemberNames();
-        for (const auto &key : keys)
-        {
-            const auto &value = data_[key];
-            std::cout << key << " = " << value.toStyledString() << std::endl;
-        }
-    }
 }
