@@ -23,11 +23,12 @@ namespace ai_chat_sdk
         std::vector<Message> messages_; // 所有历史消息
         std::time_t created_at_;        // 创建时间
         std::time_t updated_at_;        // 最后更新时间
+        std::string session_desc_;      //会话简介
 
         Session()
-            : created_at_(std::time(nullptr)), updated_at_(std::time(nullptr)) {}
+            : created_at_(std::time(nullptr)), updated_at_(std::time(nullptr)), session_desc_("新会话") {}
         Session(const std::string &model)
-            : model_name_(model), created_at_(std::time(nullptr)), updated_at_(std::time(nullptr)) {}
+            : model_name_(model), created_at_(std::time(nullptr)), updated_at_(std::time(nullptr)), session_desc_("新会话") {}
     };
 
 } // namespace ai_chat_sdk

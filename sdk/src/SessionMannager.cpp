@@ -234,4 +234,22 @@ namespace ai_chat_sdk
         return sessions_.size();
     }
 
+    // 设置会话简介
+    bool SessionManager::set_session_desc(const std::string &session_id, const std::string &desc){
+        std::lock_guard<std::mutex> lock(mutex_);
+
+        auto cur_session_hash = sessions_.find(session_id);
+        if (cur_session_hash == sessions_.end())
+        {
+            LOG_WARN_STREAM() << "设置简介失败：会话 {" << session_id << "} 不存在";
+            return false;
+        }
+
+        cur_session_hash->second->session_desc_ = desc;
+        data_manager_->set_session_desc(session_id, desc);
+
+        LOG_INFO_STREAM() << "会话 {" << session_id << "} 已修改简介为: " << desc;
+        return true;
+    }
+
 }

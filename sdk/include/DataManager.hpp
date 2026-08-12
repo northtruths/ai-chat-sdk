@@ -36,6 +36,9 @@ namespace ai_chat_sdk
         // 更新会话时间戳
         bool update_session_timestamp(const std::string &session_id, const std::time_t &time);
 
+        // 设置会话简介
+        bool set_session_desc(const std::string &session_id, const std::string &desc);
+
         // 删除会话（消息自动级联删除）
         bool delete_session(const std::string &session_id);
 
@@ -44,17 +47,16 @@ namespace ai_chat_sdk
         // 插入一条消息到指定会话
         bool insert_message(const std::string &session_id, const Message &msg);
 
-
     private:
         // 初始化数据库（创建表和索引）
         bool init_database();
 
         // 执行 SQL（无返回结果）
         bool execute_sql(const std::string &sql);
-        
+
         // 获取指定会话的所有消息（按时间升序）
         std::vector<Message> get_messages(const std::string &session_id);
-    
+
     private:
         sqlite3 *db_;                             // 数据库连接句柄
         std::string db_path_;                     // 数据库文件路径

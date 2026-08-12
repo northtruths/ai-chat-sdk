@@ -44,6 +44,9 @@ namespace ai_chat_sdk
         // 获取会话总数
         size_t get_count() const;
 
+        // 设置会话简介
+        bool set_session_desc(const std::string &session_id, const std::string &desc);
+
     private:
         // 更新会话时间戳(同步数据库)
         void update_timestamp(const std::string &session_id);
