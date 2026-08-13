@@ -135,4 +135,9 @@ namespace ai_chat_sdk
     {
         return data_;
     }
+
+    std::string OllamaConfig::get_series_name() const
+    {
+        return "ollama";
+    }
 }

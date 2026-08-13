@@ -57,5 +57,6 @@ namespace ai_chat_sdk
         // 返回整个Json
         const Json::Value &asJson() const;
         
+        std::string get_series_name() const;
     };
 }
