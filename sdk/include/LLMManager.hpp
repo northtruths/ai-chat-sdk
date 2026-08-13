@@ -9,6 +9,8 @@ namespace ai_chat_sdk
     class LLMManager
     {
     public:
+        LLMManager() = default; 
+        
         // 注册 Provider
         bool register_provider(const std::string &name, std::unique_ptr<LLMProvider> provider);
 
