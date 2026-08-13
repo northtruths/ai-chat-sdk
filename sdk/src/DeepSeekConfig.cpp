@@ -170,7 +170,7 @@ namespace ai_chat_sdk
         return data_;
     }
 
-    std::string get_model_name(){
+    std::string DeepSeekConfig::get_series_name(){
         return "deepseek";
     }
 

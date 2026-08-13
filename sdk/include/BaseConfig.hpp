@@ -58,6 +58,10 @@ namespace ai_chat_sdk
 
         // 获取完整Json Body
         virtual const Json::Value &asJson() const = 0;
+
+        //获取大模型系列名称（非具体模型版本）
+        virtual std::string get_series_name() const = 0;
+
     protected:
         // 请求头
         // 服务器地址

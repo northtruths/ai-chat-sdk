@@ -58,6 +58,6 @@ namespace ai_chat_sdk
         const Json::Value &asJson() const;
 
         //获取大模型系列名称（非具体模型版本）
-        std::string get_model_name();
+        std::string get_series_name();
     };
 }
