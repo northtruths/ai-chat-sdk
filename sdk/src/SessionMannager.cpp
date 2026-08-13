@@ -149,7 +149,7 @@ namespace ai_chat_sdk
         return cur_session_hash->second->messages_;
     }
 
-    // 获取会话列表
+    // 获取会话列表 (返回格式为: sessionid|会话简介)
     std::vector<std::string> SessionManager::get_session_list() const
     {
         LOG_DEBUG("进入获取会话列表");
@@ -160,7 +160,7 @@ namespace ai_chat_sdk
 
         for (const auto &pair : sessions_)
         {
-            temp.emplace_back(pair.second->updated_at_, pair.first);
+            temp.emplace_back(pair.second->updated_at_, pair.first + "|" + pair.second->session_desc_);
             LOG_DEBUG_STREAM() << pair.first << " 会话已获取";
         }
 
