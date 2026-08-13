@@ -129,7 +129,7 @@ namespace ai_chat_sdk
         return get("stream").asBool();
     }
 
-    void DeepSeekConfig::set_model_desc(const std::string &desc = "DeepSeek-V4-Pro 是深度求索公司开发的旗舰级大语言模型，支持百万级上下文，具备强大的推理能力和多语言处理能力，适合复杂问答、代码生成、文本分析等高级任务。")
+    void DeepSeekConfig::set_model_desc(const std::string &desc = "DeepSeek，高效能AI助手，具备深度语义理解、多领域知识覆盖与长文本处理能力，且完全免费，模型持续迭代升级。")
     {
         desc_ = desc;
     }
@@ -169,4 +169,9 @@ namespace ai_chat_sdk
     {
         return data_;
     }
+
+    std::string get_model_name(){
+        return "deepseek";
+    }
+
 }
