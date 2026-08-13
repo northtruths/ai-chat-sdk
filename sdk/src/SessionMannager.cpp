@@ -55,7 +55,7 @@ namespace ai_chat_sdk
     bool SessionManager::delete_session_to_db(const std::string &session_id)
     {
         bool ok = data_manager_->delete_session(session_id);
-        if (ok)
+        if (!ok)
         {
             LOG_WARN("删除会话失败");
             return false;
@@ -149,10 +149,9 @@ namespace ai_chat_sdk
         return cur_session_hash->second->messages_;
     }
 
-    // 获取会话列表 (返回格式为: sessionid|会话简介)
+    // 获取会话列表 (返回 session id)
     std::vector<std::string> SessionManager::get_session_list() const
     {
-        LOG_DEBUG("进入获取会话列表");
         std::lock_guard<std::mutex> lock(mutex_);
 
         std::vector<std::pair<std::time_t, std::string>> temp;
@@ -160,7 +159,11 @@ namespace ai_chat_sdk
 
         for (const auto &pair : sessions_)
         {
-            temp.emplace_back(pair.second->updated_at_, pair.first + "|" + pair.second->session_desc_);
+            if(!pair.second){
+                LOG_ERROR("(SessionManager) 会话数据错误，包含了错误/无效会话");
+                continue;
+            }
+            temp.emplace_back(pair.second->updated_at_, pair.first);
             LOG_DEBUG_STREAM() << pair.first << " 会话已获取";
         }
 
