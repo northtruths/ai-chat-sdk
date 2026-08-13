@@ -12,20 +12,20 @@
 using namespace mylog;
 namespace ai_chat_sdk
 {
-    OllamaProvider::OllamaProvider(std::unique_ptr<BaseConfig> cf)
+    OllamaProvider::OllamaProvider(std::shared_ptr<BaseConfig> &cf)
     {
-        set_model(std::move(cf));
+        set_model(cf);
     }
 
     // 设置模型配置
-    bool OllamaProvider::set_model(std::unique_ptr<BaseConfig> cf)
+    bool OllamaProvider::set_model(std::shared_ptr<BaseConfig> &cf)
     {
         if (is_available_)
         {
             LOG_WARN("模型已经初始化");
             return false;
         }
-        config_ = std::move(cf);
+        config_ = cf;
         is_available_ = true;
         LOG_INFO("(Ollama) 模型初始化成功");
         return true;

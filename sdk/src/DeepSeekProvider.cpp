@@ -13,15 +13,15 @@
 using namespace mylog;
 namespace ai_chat_sdk
 {
-    DeepSeekProvider::DeepSeekProvider(std::unique_ptr<BaseConfig> cf)
+    DeepSeekProvider::DeepSeekProvider(std::shared_ptr<BaseConfig> &cf)
     {
-        set_model(std::move(cf));
+        set_model(cf);
     }
 
     // 设置模型配置
-    bool DeepSeekProvider::set_model(std::unique_ptr<BaseConfig> cf)
+    bool DeepSeekProvider::set_model(std::shared_ptr<BaseConfig> &cf)
     {
-        config_ = std::move(cf);
+        config_ = cf;
         is_available_ = true;
         LOG_INFO("(DeepSeek) 模型配置设置成功");
         return true;
