@@ -12,13 +12,13 @@
 using namespace mylog;
 namespace ai_chat_sdk
 {
-    OllamaProvider::OllamaProvider(std::shared_ptr<BaseConfig> &cf)
+    OllamaProvider::OllamaProvider(std::shared_ptr<BaseConfig> cf)
     {
         set_model(cf);
     }
 
     // 设置模型配置
-    bool OllamaProvider::set_model(std::shared_ptr<BaseConfig> &cf)
+    bool OllamaProvider::set_model(std::shared_ptr<BaseConfig> cf)
     {
         if (is_available_)
         {
