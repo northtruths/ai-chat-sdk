@@ -9,7 +9,7 @@ namespace ai_chat_sdk
     }
     void DeepSeekConfig::init_defaults()
     {
-        // 模型
+        // 默认模型
         data_["model"] = "deepseek-v4-pro";
 
         // 思考模式
@@ -21,23 +21,8 @@ namespace ai_chat_sdk
         data_["temperature"] = 1.0;
         data_["top_p"] = 1.0;
 
-        // 响应格式
-        data_["response_format"]["type"] = "text";
-
         // 流式
         data_["stream"] = false;
-        data_["stream_options"] = Json::Value::null;
-
-        // 停止词
-        data_["stop"] = Json::Value::null;
-
-        // 工具调用
-        data_["tools"] = Json::Value::null;
-        data_["tool_choice"] = "none";
-
-        // 日志
-        data_["logprobs"] = false;
-        data_["top_logprobs"] = Json::Value::null;
 
         // 消息数组（空）
         data_["messages"] = Json::Value(Json::arrayValue);
