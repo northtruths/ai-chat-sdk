@@ -9,9 +9,9 @@ namespace ai_chat_sdk
     public:
         // 构造函数，可以构造时传配置直接初始化
         DeepSeekProvider() = default;
-        DeepSeekProvider(std::shared_ptr<BaseConfig> &cf);
+        DeepSeekProvider(std::shared_ptr<BaseConfig> cf);
         // 设置模型配置
-        bool set_model(std::shared_ptr<BaseConfig> &cf);
+        bool set_model(std::shared_ptr<BaseConfig> cf);
         // 检测模型是否有效
         bool is_available() const;
         // 全量式发送信息

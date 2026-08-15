@@ -16,7 +16,7 @@ namespace ai_chat_sdk
     public:
         virtual ~LLMProvider() = default;
         // 设置模型配置
-        virtual bool set_model(std::shared_ptr<BaseConfig> &cf) = 0;
+        virtual bool set_model(std::shared_ptr<BaseConfig> cf) = 0;
         // 检测模型是否有效
         virtual bool is_available() const = 0;
         // 全量式发送信息
