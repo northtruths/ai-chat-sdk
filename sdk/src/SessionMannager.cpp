@@ -149,7 +149,7 @@ namespace ai_chat_sdk
         return cur_session_hash->second->messages_;
     }
 
-    // 获取会话列表 (返回 session id)
+    // 按时间降序获取会话列表 (返回 session id)
     std::vector<std::string> SessionManager::get_session_list() const
     {
         std::lock_guard<std::mutex> lock(mutex_);
