@@ -59,7 +59,7 @@ namespace ai_chat_sdk
     // 通用设置接口
     bool DeepSeekConfig::set(const std::string &key, const Json::Value &value)
     {
-        if (data_.isMember(key))
+        if (!data_.isMember(key))
         {
             LOG_WARN_STREAM() << "插入了非默认参数，请自行确定参数是否有效: " << key;
         }
