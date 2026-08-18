@@ -44,11 +44,10 @@ namespace ai_chat_sdk
     {
         if (data_.isMember(key))
         {
-            data_[key] = value;
-            return true;
+            LOG_WARN_STREAM() << "插入了非默认参数，请自行确定参数是否有效: " << key;
         }
-        LOG_WARN_STREAM() << "参数设置失败：不支持 " << key;
-        return false;
+        data_[key] = value;
+        return true;
     }
 
     Json::Value OllamaConfig::get(const std::string &key) const

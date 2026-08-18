@@ -9,37 +9,42 @@ namespace ai_chat_sdk
     }
     void GeminiConfig::init_defaults()
     {
-    // 默认模型
-    data_["model"] = "gemini-3.5-flash";
+        // 默认模型
+        data_["model"] = "gemini-3.5-flash";
 
-    // 支持的参数
-    data_["max_tokens"] = 4096;
-    data_["temperature"] = 1.0;
-    data_["stream"] = false;
+        // 支持的参数
+        data_["max_tokens"] = 4096;
+        data_["temperature"] = 1.0;
+        data_["stream"] = false;
 
-    // 消息数组（空）
-    data_["messages"] = Json::Value(Json::arrayValue);
+        // 消息数组（空）
+        data_["messages"] = Json::Value(Json::arrayValue);
     }
     // 设置模型完整URL
-    void GeminiConfig::set_url(const std::string &endpoint, const std::string &path){
+    void GeminiConfig::set_url(const std::string &endpoint, const std::string &path)
+    {
         endpoint_ = endpoint;
         api_path_ = path;
     }
     // 获取服务器地址
-    std::string GeminiConfig::get_endpoint(){
+    std::string GeminiConfig::get_endpoint()
+    {
         return endpoint_;
     }
     // 获取模型具体路径
-    std::string GeminiConfig::get_path(){
+    std::string GeminiConfig::get_path()
+    {
         return api_path_;
     }
 
     // 设置API_KEY
-    void GeminiConfig::set_api_key(const std::string &api_key){
+    void GeminiConfig::set_api_key(const std::string &api_key)
+    {
         api_key_ = api_key;
     }
     // 获取API_KEY
-    std::string GeminiConfig::get_api_key(){
+    std::string GeminiConfig::get_api_key()
+    {
         return api_key_;
     }
 
@@ -48,11 +53,10 @@ namespace ai_chat_sdk
     {
         if (data_.isMember(key))
         {
-            data_[key] = value;
-            return true;
+            LOG_WARN_STREAM() << "插入了非默认参数，请自行确定参数是否有效: " << key;
         }
-        LOG_WARN_STREAM() << "参数设置失败：不支持 " << key;
-        return false;
+        data_[key] = value;
+        return true;
     }
 
     Json::Value GeminiConfig::get(const std::string &key) const
@@ -140,7 +144,8 @@ namespace ai_chat_sdk
         return data_;
     }
 
-    std::string GeminiConfig::get_series_name() const{
+    std::string GeminiConfig::get_series_name() const
+    {
         return "gemini";
     }
 }
