@@ -148,4 +148,12 @@ namespace ai_chat_sdk
     {
         return "gemini";
     }
+
+    // 工厂函数，创建一个默认 config
+    std::shared_ptr<GeminiConfig> get_gm_config()
+    {
+        auto gm_config = std::make_shared<GeminiConfig>();
+        gm_config->set_url("https://generativelanguage.googleapis.com", "/v1beta/openai/chat/completions");
+        return gm_config;
+    }
 }

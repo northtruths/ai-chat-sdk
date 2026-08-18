@@ -1,15 +1,20 @@
 // ChatSdk.cpp
 
 #include "ChatSDK.hpp"
-#include "OllamaProvider.hpp"
+#include "DeepSeekConfig.hpp"
 #include "DeepSeekProvider.hpp"
+#include "OllamaConfig.hpp"
+#include "OllamaProvider.hpp"
+#include "GeminiConfig.hpp"
+#include "GeminiProvider.hpp"
 
 namespace ai_chat_sdk
 {
     // 构造函数
     ChatSDK::ChatSDK()
         : llm_manager_(std::make_unique<LLMManager>()), session_manager_(std::make_unique<SessionManager>())
-    {}
+    {
+    }
 
     // 初始化模型
     bool ChatSDK::init_models(std::vector<std::shared_ptr<BaseConfig>> &configs)
@@ -25,6 +30,19 @@ namespace ai_chat_sdk
         return true;
     }
 
+    // 获取默认 configs
+    std::unordered_map<std::string, std::shared_ptr<BaseConfig>> get_default_configs();
+    {
+        std::unordered_map<std::string, std::shared_ptr<BaseConfig>>  configs;
+        auto ds_config = get_ds_config();
+        configs["deepseek"] = ds_config;
+        auto ol_config = get_ol_config();
+        configs["ollama"] = ol_config;
+        auto gm_config = get_gm_config();
+        configs["gemini"] = gm_config;
+        return configs;
+    }
+
     // 创建session
     std::string ChatSDK::create_session(const std::string &model_name)
     {
@@ -37,7 +55,7 @@ namespace ai_chat_sdk
         return session_manager_->get_session(session_id);
     }
 
-    // 获取所有会话列表 (格式为: sessionid|会话简介 )
+    // 按时间降序获取所有会话列表 (会话 id)
     std::vector<std::string> ChatSDK::get_session_list()
     {
         return session_manager_->get_session_list();
@@ -144,9 +162,12 @@ namespace ai_chat_sdk
             }
             else if (model_name == "chatgpt")
             {
+                LOG_INFO("还未支持 chatgpt");
             }
             else if (model_name == "gemini")
             {
+                auto provider = std::make_unique<GeminiProvider>(config);
+                llm_manager_->register_provider("gemini", std::move(provider));
             }
             else
             {

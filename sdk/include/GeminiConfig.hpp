@@ -59,6 +59,8 @@ namespace ai_chat_sdk
 
         //获取大模型系列名称 -> gemini
         std::string get_series_name() const;
-        
-    };
+    }; // GeminiGonfig
+
+    //工厂函数，创建一个默认 config
+    std::shared_ptr<GeminiConfig> get_gm_config();
 }

@@ -139,4 +139,12 @@ namespace ai_chat_sdk
     {
         return "ollama";
     }
+
+    // 工厂函数，创建一个默认 config
+    std::shared_ptr<OllamaConfig> get_ol_config()
+    {
+        auto ol_config = std::make_shared<OllamaConfig>();
+        ol_config->set_url("http://localhost:11434", "/api/chat");
+        return ol_config;
+    }
 }

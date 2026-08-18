@@ -59,5 +59,9 @@ namespace ai_chat_sdk
         
         //获取大模型系列名称 -> ollama
         std::string get_series_name() const;
-    };
+    };// OllamaConfig
+
+    
+    //工厂函数，创建一个默认 config
+    std::shared_ptr<OllamaConfig> get_ol_config();
 }

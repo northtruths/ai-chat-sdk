@@ -5,6 +5,7 @@
 #include <jsoncpp/json/json.h>
 #include <string>
 #include <iostream>
+#include <memory>
 
 namespace ai_chat_sdk
 {
@@ -60,4 +61,7 @@ namespace ai_chat_sdk
         //获取大模型系列名称 -> deepseek
         std::string get_series_name() const;
     };
+
+    //工厂函数，创建一个默认 config
+    std::shared_ptr<DeepSeekConfig> get_ds_config();
 }

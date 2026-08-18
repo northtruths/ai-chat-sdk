@@ -158,4 +158,12 @@ namespace ai_chat_sdk
         return "deepseek";
     }
 
+    
+    //工厂函数，创建一个默认 config
+    std::shared_ptr<DeepSeekConfig> get_ds_config(){
+        auto ds_config = std::make_shared<DeepSeekConfig>();
+        ds_config->set_url("https://api.deepseek.com", "/chat/completions");
+        return ds_config;
+    }
+
 }
