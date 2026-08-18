@@ -57,6 +57,7 @@ namespace ai_chat_sdk
         // 返回整个Json
         const Json::Value &asJson() const;
         
+        //获取大模型系列名称 -> ollama
         std::string get_series_name() const;
     };
 }

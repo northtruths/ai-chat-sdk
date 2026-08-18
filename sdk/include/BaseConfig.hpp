@@ -31,7 +31,7 @@ namespace ai_chat_sdk
         // 获取API_KEY
         virtual std::string get_api_key() = 0;
 
-        // 通用接口
+        // 通用接口, 支持任何 json 数据，但模型无对应参数则会无效
         virtual bool set(const std::string &key, const Json::Value &value) = 0;
         virtual Json::Value get(const std::string &key) const = 0;
 

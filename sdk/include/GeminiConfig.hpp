@@ -57,7 +57,7 @@ namespace ai_chat_sdk
         // 返回整个Json
         const Json::Value &asJson() const;
 
-        //获取大模型系列名称（非具体模型版本）
+        //获取大模型系列名称 -> gemini
         std::string get_series_name() const;
         
     };
