@@ -31,7 +31,7 @@ namespace ai_chat_sdk
     }
 
     // 获取默认 configs
-    std::unordered_map<std::string, std::shared_ptr<BaseConfig>> get_default_configs();
+    std::unordered_map<std::string, std::shared_ptr<BaseConfig>> ChatSDK::get_default_configs()
     {
         std::unordered_map<std::string, std::shared_ptr<BaseConfig>>  configs;
         auto ds_config = get_ds_config();
