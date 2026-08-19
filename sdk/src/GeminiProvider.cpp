@@ -9,7 +9,6 @@
 #include <sstream>
 #include <functional>
 
-
 using namespace mylog;
 namespace ai_chat_sdk
 {
@@ -100,7 +99,10 @@ namespace ai_chat_sdk
                     LOG_ERROR("(Gemini) 信息发送失败！原因如下：网络连接失败，请检查网络或代理设置");
                 }
                 return std::string();
-            }else{
+            }
+            else
+            {
+                LOG_DEBUG_STREAM() << "Gemini 响应体: " << res->body;
                 log_error_code(res->status);
             }
             return std::string();
@@ -180,6 +182,9 @@ namespace ai_chat_sdk
         std::string full_content;
         // 状态码
         int status_code = 0;
+        // 错误信息
+        std::string error_body;
+        bool is_error = false;
         // 构建 Request 对象，设置 response_handler 和 content_receiver
         httplib::Request request;
         request.method = "POST";
@@ -193,20 +198,21 @@ namespace ai_chat_sdk
             if (status_code != 200)
             {
                 log_error_code(status_code);
-                return false;
+                is_error = true;
+                return true;
             }
             return true;
         };
         // 内容接收器：解析数据段，进行调用回调（输出内容）和拼接完整输出（构建历史信息）
-        Json::CharReaderBuilder reader;//json反序列化，放外面避免频繁构建
+        Json::CharReaderBuilder reader; // json反序列化，放外面避免频繁构建
         request.content_receiver = [&](const char *data, size_t len,
                                        uint64_t offset, uint64_t total)
         {
-            if (status_code != 200)
+            if (is_error)
             {
-                LOG_WARN("(Gemini) 程序出错！响应处理器未正确运行或内容接收器运行出错！");
-                log_error_code(status_code);
-                return false;
+                error_body.append(data, len);
+                LOG_DEBUG_STREAM() << "Gemini 响应体: " << error_body;
+                return true;
             }
             // 内容进入缓冲区
             buffer.append(data, len);
@@ -229,8 +235,8 @@ namespace ai_chat_sdk
                 if (event.substr(0, 6) == "data: ")
                 {
                     std::string resp_json_str = event.substr(6);
-                    //LOG_DEBUG_STREAM() << "事件原始json字符串：" << resp_json_str;
-                    // 解析数据
+                    // LOG_DEBUG_STREAM() << "事件原始json字符串：" << resp_json_str;
+                    //  解析数据
                     if (resp_json_str == "[DONE]")
                     {
                         callback("", true);

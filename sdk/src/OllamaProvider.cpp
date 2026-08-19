@@ -103,6 +103,7 @@ namespace ai_chat_sdk
             }
             else
             {
+                LOG_DEBUG_STREAM() << "Ollama 响应体: " << res->body;
                 log_error_code(res->status);
             }
             return std::string();
@@ -180,6 +181,9 @@ namespace ai_chat_sdk
         std::string full_content;
         // 状态码
         int status_code = 0;
+        // 错误信息
+        std::string error_body;
+        bool is_error = false;
         // 构建 Request 对象，设置 response_handler 和 content_receiver
         httplib::Request request;
         request.method = "POST";
@@ -193,7 +197,8 @@ namespace ai_chat_sdk
             if (status_code != 200)
             {
                 log_error_code(status_code);
-                return false;
+                is_error = true;
+                return true;
             }
             return true;
         };
@@ -202,11 +207,11 @@ namespace ai_chat_sdk
         request.content_receiver = [&](const char *data, size_t len,
                                        uint64_t offset, uint64_t total)
         {
-            if (status_code != 200)
+            if (is_error)
             {
-                LOG_WARN("(Ollama) 程序出错！响应处理器未正确运行或内容接收器运行出错！");
-                log_error_code(status_code);
-                return false;
+                error_body.append(data, len);
+                LOG_DEBUG_STREAM() << "Gemini 响应体: " << error_body;
+                return true;
             }
             // 内容进入缓冲区
             buffer.append(data, len);
