@@ -7,6 +7,8 @@
 #include "OllamaProvider.hpp"
 #include "GeminiConfig.hpp"
 #include "GeminiProvider.hpp"
+#include "ChatGPTConfig.hpp"
+#include "ChatGPTProvider.hpp"
 
 namespace ai_chat_sdk
 {
@@ -40,6 +42,8 @@ namespace ai_chat_sdk
         configs["ollama"] = ol_config;
         auto gm_config = get_gm_config();
         configs["gemini"] = gm_config;
+        auto gpt_config = get_gpt_config();
+        configs["chatgpt"] = gpt_config;
         return configs;
     }
 
@@ -162,7 +166,8 @@ namespace ai_chat_sdk
             }
             else if (model_name == "chatgpt")
             {
-                LOG_INFO("还未支持 chatgpt");
+                auto provider = std::make_unique<ChatGPTProvider>(config);
+                llm_manager_->register_provider("chatgpt", std::move(provider));
             }
             else if (model_name == "gemini")
             {
