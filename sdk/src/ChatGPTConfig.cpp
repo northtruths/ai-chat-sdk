@@ -10,10 +10,10 @@ namespace ai_chat_sdk
     void ChatGPTConfig::init_defaults()
     {
         // 默认模型
-        data_["model"] = "gpt-5.4";
+        data_["model"] = "gpt-5.4-mini";
 
         // 支持的参数
-        data_["max_tokens"] = 4096;
+        data_["max_completion_tokens"] = 4096;
         data_["temperature"] = 1.0;
         data_["stream"] = false;
 
@@ -89,11 +89,11 @@ namespace ai_chat_sdk
 
     void ChatGPTConfig::set_max_tokens(int tokens)
     {
-        set("max_tokens", tokens);
+        set("max_completion_tokens", tokens);
     }
     int ChatGPTConfig::get_max_tokens() const
     {
-        return get("max_tokens").asInt();
+        return get("max_completion_tokens").asInt();
     }
 
     void ChatGPTConfig::set_stream(bool stream)
@@ -146,7 +146,7 @@ namespace ai_chat_sdk
 
     std::string ChatGPTConfig::get_series_name() const
     {
-        return "gemini";
+        return "chatgpt";
     }
 
     // 工厂函数，创建一个默认 config
