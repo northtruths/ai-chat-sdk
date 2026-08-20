@@ -33,17 +33,15 @@ namespace ai_chat_sdk
     }
 
     // 获取默认 configs
-    std::unordered_map<std::string, std::shared_ptr<BaseConfig>> ChatSDK::get_default_configs()
+    std::vector<std::shared_ptr<BaseConfig>> ChatSDK::get_default_configs()
     {
-        std::unordered_map<std::string, std::shared_ptr<BaseConfig>>  configs;
-        auto ds_config = get_ds_config();
-        configs["deepseek"] = ds_config;
-        auto ol_config = get_ol_config();
-        configs["ollama"] = ol_config;
-        auto gm_config = get_gm_config();
-        configs["gemini"] = gm_config;
-        auto gpt_config = get_gpt_config();
-        configs["chatgpt"] = gpt_config;
+        std::vector<std::shared_ptr<BaseConfig>> configs;
+
+        configs.push_back(get_ds_config());  // 第1个：DeepSeek
+        configs.push_back(get_gpt_config()); // 第2个：ChatGPT
+        configs.push_back(get_gm_config());  // 第3个：Gemini
+        configs.push_back(get_ol_config());  // 第4个：Ollama
+
         return configs;
     }
 
@@ -72,7 +70,7 @@ namespace ai_chat_sdk
     }
 
     // 获取可⽤模型列表
-    std::vector<std::string> ChatSDK::get_available_models()
+    std::vector<ModelInfo> ChatSDK::get_available_models()
     {
         return llm_manager_->get_available_models();
     }

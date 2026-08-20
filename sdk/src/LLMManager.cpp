@@ -66,15 +66,21 @@ namespace ai_chat_sdk
         return pd->send_message_stream(messages, callback);
     }
 
-    // 获取可用模型
-    std::vector<std::string> LLMManager::get_available_models() const
+    // 获取可用模型信息
+    std::vector<ModelInfo> LLMManager::get_available_models() const
     {
-        std::vector<std::string> registers;
-        for (auto &it : providers_)
+
+        std::vector<ModelInfo> infos;
+        for (auto &pd : providers_)
         {
-            registers.push_back(it.first);
+            ModelInfo temp;
+            temp.is_available_ = true;
+            temp.model_name_ = pd.second->get_model();
+            temp.model_desc_ = pd.second->get_model_desc();
+            temp.provider_ = pd.first;
+            infos.push_back(temp);
         }
-        return registers;
+        return infos;
     }
 
     // 检查模型是否可用
