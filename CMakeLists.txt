@@ -13,11 +13,8 @@ find_package(GTest REQUIRED)
 # ★ 收集 SDK 源文件
 file(GLOB_RECURSE SDK_SRCS "sdk/src/*.cpp")
 
-# 只保留需要的
-list(FILTER SDK_SRCS INCLUDE REGEX "DeepSeek|Ollama|Gemini|utils|Common|DataManager|LLMManager|Session|BaseConfig|ChatSDK")
-
 # 测试文件
-file(GLOB_RECURSE TEST_SRCS "tests/gemini*.cpp")
+file(GLOB_RECURSE TEST_SRCS "tests/chat*.cpp")
 
 # ============================================================
 #  目标1：编译静态库（给其他人用）
@@ -33,7 +30,6 @@ target_compile_definitions(ai_chat_sdk PRIVATE
     CPPHTTPLIB_OPENSSL_SUPPORT
 )
 
-# ★ 库的链接（之前漏了！）
 target_link_libraries(ai_chat_sdk
     OpenSSL::SSL
     OpenSSL::Crypto
@@ -46,8 +42,9 @@ target_link_libraries(ai_chat_sdk
 
 # ============================================================
 #  目标2：编译测试程序（自己调试用）
+#  EXCLUDE_FROM_ALL：默认不编译，只有显式 make test_chat 才编译
 # ============================================================
-add_executable(test_chat ${SDK_SRCS} ${TEST_SRCS})
+add_executable(test_chat EXCLUDE_FROM_ALL ${SDK_SRCS} ${TEST_SRCS})
 
 target_include_directories(test_chat PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/sdk/include
