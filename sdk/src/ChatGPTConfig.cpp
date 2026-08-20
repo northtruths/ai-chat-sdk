@@ -154,6 +154,7 @@ namespace ai_chat_sdk
     {
         auto gm_config = std::make_shared<ChatGPTConfig>();
         gm_config->set_url("https://api.openai.com", "/v1/chat/completions");
+        gm_config->set_model_desc();
         return gm_config;
     }
 }

@@ -145,6 +145,7 @@ namespace ai_chat_sdk
     {
         auto ol_config = std::make_shared<OllamaConfig>();
         ol_config->set_url("http://localhost:11434", "/api/chat");
+        ol_config->set_model_desc();
         return ol_config;
     }
 }

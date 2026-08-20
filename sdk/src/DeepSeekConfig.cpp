@@ -163,6 +163,7 @@ namespace ai_chat_sdk
     std::shared_ptr<DeepSeekConfig> get_ds_config(){
         auto ds_config = std::make_shared<DeepSeekConfig>();
         ds_config->set_url("https://api.deepseek.com", "/chat/completions");
+        ds_config->set_model_desc();
         return ds_config;
     }
 

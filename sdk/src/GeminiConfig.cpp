@@ -154,6 +154,7 @@ namespace ai_chat_sdk
     {
         auto gm_config = std::make_shared<GeminiConfig>();
         gm_config->set_url("https://generativelanguage.googleapis.com", "/v1beta/openai/chat/completions");
+        gm_config->set_model_desc();
         return gm_config;
     }
 }
