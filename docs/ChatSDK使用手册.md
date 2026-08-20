@@ -40,7 +40,7 @@ ai-chat-sdk/
 │   │   ├── DataManager.hpp     # SQLite 持久化
 │   │   ├── Session.hpp         # Session / Message 数据结构
 │   │   ├── Common.hpp          # 通用工具（状态码日志）
-│   │   └── utils/              # 自研日志系统 mylog
+│   │   └── utils/              # 自研日志系统 mylog(头文件logger.h)
 │   └── src/                    # 实现源码
 ├── tests/                      # 测试程序
 └── docs/                       # 文档
@@ -64,15 +64,28 @@ CMake:  target_link_libraries({ProjName} PRIVATE ai_chat_sdk)
 **`bool init_models(std::vector<std::shared_ptr<BaseConfig>>& configs)`**
 
 功能：初始化所支持的模型
+
 参数：configs - 所有支持的模型需配置的参数
+
 返回值：初始化成功返回 true，否则返回 false
 
 ---
 
+**`std::vector<std::shared_ptr<BaseConfig>> get_default_configs();`**
+
+功能：获取 SDK 内置的默认模型配置列表，按固定顺序（[0]deepseek->[1]chatgpt->[2]gemini->[3]ollam）排列，方便用户快速初始化所有支持的模型，但需自己设置apikey
+
+返回值：std::vector<std::shared_ptr<BaseConfig>>
+返回一个按特定顺序排列的配置列表，用户可直接传入 init_models，或按需修改个别配置后再传入。
+
+--- 
+
 **`std::string create_session(const std::string& model_name)`**
 
 功能：为 model_name 模型创建会话
+
 参数：model_name - 模型系列名（`"deepseek"` / `"ollama"` / `"gemini"`，非具体版本号）
+
 返回值：返回会话 Id
 
 ---
@@ -80,7 +93,9 @@ CMake:  target_link_libraries({ProjName} PRIVATE ai_chat_sdk)
 **`std::shared_ptr<Session> get_session(const std::string& session_id)`**
 
 功能：获取 session_id 对应的会话信息
+
 参数：session_id - 会话 Id
+
 返回值：session_id 对应的会话信息（含全部历史消息）；不存在时返回空 shared_ptr
 
 ---
@@ -88,6 +103,7 @@ CMake:  target_link_libraries({ProjName} PRIVATE ai_chat_sdk)
 **`std::vector<std::string> get_session_list()`**
 
 功能：获取所有会话信息（按更新时间降序）
+
 返回值：返回所有会话 Id 列表
 
 ---
@@ -95,6 +111,7 @@ CMake:  target_link_libraries({ProjName} PRIVATE ai_chat_sdk)
 **`std::vector<std::string> get_available_models()`**
 
 功能：获取当前已注册可用的所有模型
+
 返回值：返回可用模型名称列表
 
 ---
@@ -102,7 +119,9 @@ CMake:  target_link_libraries({ProjName} PRIVATE ai_chat_sdk)
 **`bool delete_session(const std::string& session_id)`**
 
 功能：删除 session_id 对应的会话信息（消息级联删除，同步数据库）
+
 参数：session_id - 会话 Id
+
 返回值：删除成功返回 true，否则返回 false
 
 ---
@@ -110,9 +129,11 @@ CMake:  target_link_libraries({ProjName} PRIVATE ai_chat_sdk)
 **`std::string send_message(const std::string session_id, const std::string& message)`**
 
 功能：给大模型发送消息，大模型生成所有回复后一次性返回
+
 参数：
 　session_id - 会话 Id
 　message - 给大模型发送的消息内容
+
 返回值：返回大模型的完整回复（失败返回空字符串）
 
 ---
@@ -120,10 +141,12 @@ CMake:  target_link_libraries({ProjName} PRIVATE ai_chat_sdk)
 **`std::string send_message_stream(const std::string session_id, const std::string& message, std::function<void(const std::string&, bool)> callback)`**
 
 功能：给大模型发送消息，大模型生成一点返回一点，即流式响应
+
 参数：
 　session_id - 会话 Id
 　message - 给大模型发送的消息内容
 　callback - 大模型返回消息用户处理回调函数，参数为（数据块内容, 是否为末尾数据）
+
 返回值：返回大模型的完整回复（失败返回空字符串）
 
 > 相关数据结构（`Session` / `Message`）请查看 `sdk/include/Session.hpp` 文件。
@@ -142,11 +165,11 @@ config->set_temperature(temp);
 config->set_max_tokens(tokens);
 ```
 
-| 配置类 | series_name | 默认模型 | 默认 max_tokens | 默认 temperature |
-|--------|-------------|----------|:---:|:---:|
-| `DeepSeekConfig` | `deepseek` | `deepseek-v4-pro` | 4096 | 1.0 |
-| `OllamaConfig` | `ollama` | `deepseek-r1:1.5b` | num_ctx=2048 | 0.7 |
-| `GeminiConfig` | `gemini` | `gemini-3.5-flash` | 4096 | 1.0 |
+| 配置类           | series_name  | 默认模型            | 默认 max_tokens | 默认 temperature |
+|------------------|--------------|--------------------|:---------------:|:---------------:|
+| `DeepSeekConfig` | `deepseek`   | `deepseek-v4-pro`  | 4096            | 1.0             |
+| `OllamaConfig`   | `ollama`     | `deepseek-r1:1.5b` | num_ctx=2048    | 0.7             |
+| `GeminiConfig`   | `gemini`     | `gemini-3.5-flash` | 4096            | 1.0             |
 
 > DeepSeek / Gemini 走 OpenAI 兼容格式，鉴权头为 `Authorization: Bearer <api_key>`；Ollama 本地无需 api_key。
 
@@ -230,7 +253,7 @@ int main() {
 1. mkdir build && cd build      # 创建build⽬录并进⼊该⽬录
 2. cmake ..     # 生成makefile文件
 3. cmake ai_chat_sdk    #编译ChatSDK生成  libai_chat_sdk.a 静态库
-4. sudo make install    #安装静态库
+4. sudo make install ai_chat_sdk     #安装静态库
 静态库安装在：
 /usr/local/lib
 头⽂件安装位置：
