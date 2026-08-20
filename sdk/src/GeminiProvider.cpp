@@ -266,12 +266,12 @@ namespace ai_chat_sdk
                         }
                         else
                         {
-                            LOG_DEBUG("(Gemini) json格式不符合预期");
+                            LOG_DEBUG("(Gemini) json格式不符合预期, 没有具体消息");
                         }
                     }
                     else
                     {
-                        LOG_DEBUG("(Gemini) json格式不符合预期");
+                        LOG_DEBUG("(Gemini) json格式不符合预期, 没有具体消息");
                     }
                 }
             }
