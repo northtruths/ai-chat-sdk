@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Common.hpp"
-#include "BaseConfig.hpp"
+#include "APIConfig.hpp"
 #include "LLMManager.hpp"
 #include "SessionManager.hpp"
 #include <memory>
@@ -20,8 +20,8 @@ namespace ai_chat_sdk
         ChatSDK();
         // 初始化模型(必须提供配置好的模型配置 config)
         bool init_models(std::vector<std::shared_ptr<BaseConfig>> &configs);
-        // 获取默认 configs (除本地模型，其余需自己提供设置 key)
-        std::unordered_map<std::string, std::shared_ptr<BaseConfig>> get_default_configs();
+        // 获取默认 configs (固定下标顺序为: [0]deepseek->[1]chatgpt->[2]gemini->[3]ollama, 除本地模型，其余需自己提供设置 key)
+        std::vector<std::shared_ptr<BaseConfig>> get_default_configs();
         // 创建session
         std::string create_session(const std::string &model_name);
         // 获取指定完整会话
@@ -31,7 +31,7 @@ namespace ai_chat_sdk
         // 删除会话
         bool delete_session(const std::string &session_id);
         // 获取可用模型列表
-        std::vector<std::string> get_available_models();
+        std::vector<ModelInfo> get_available_models();
         // 发送消息 - 全量返回
         std::string send_message(const std::string session_id, const std::string &message);
         // 发送消息 - 流式响应

@@ -3,6 +3,7 @@
 #include "LLMProvider.hpp"
 #include "Session.hpp"
 #include "BaseConfig.hpp"
+#include "Common.hpp"
 
 namespace ai_chat_sdk
 {
@@ -26,8 +27,8 @@ namespace ai_chat_sdk
                                       const std::vector<Message> &messages,
                                       std::function<void(const std::string &, bool)> callback);
 
-        // 获取可用模型
-        std::vector<std::string> get_available_models() const;
+        // 获取可用模型信息
+        std::vector<ModelInfo> get_available_models() const;
 
         // 检查模型是否可用
         bool is_model_available(const std::string &name) const;
