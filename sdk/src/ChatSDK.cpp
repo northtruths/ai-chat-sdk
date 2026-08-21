@@ -17,9 +17,13 @@ namespace ai_chat_sdk
         : llm_manager_(std::make_unique<LLMManager>()), session_manager_(std::make_unique<SessionManager>())
     {
     }
+    ChatSDK::ChatSDK(std::string db_path = "./chat.db")
+        : llm_manager_(std::make_unique<LLMManager>()), session_manager_(std::make_unique<SessionManager>(db_path))
+    {
+    }
 
     // 初始化模型
-    bool ChatSDK::init_models(std::vector<std::shared_ptr<BaseConfig>> &configs)
+    bool ChatSDK::init_models(std::vector<std::shared_ptr<BaseConfig>> configs)
     {
         for (auto &config : configs)
         {

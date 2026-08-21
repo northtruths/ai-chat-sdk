@@ -18,8 +18,9 @@ namespace ai_chat_sdk
     public:
         // 构造函数
         ChatSDK();
+        ChatSDK(std::string db_path = "./chat.db");
         // 初始化模型(必须提供配置好的模型配置 config)
-        bool init_models(std::vector<std::shared_ptr<BaseConfig>> &configs);
+        bool init_models(std::vector<std::shared_ptr<BaseConfig>> configs);
         // 获取默认 configs (固定下标顺序为: [0]deepseek->[1]chatgpt->[2]gemini->[3]ollama, 除本地模型，其余需自己提供设置 key)
         std::vector<std::shared_ptr<BaseConfig>> get_default_configs();
         // 创建session
