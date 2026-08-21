@@ -1,0 +1,10 @@
+/home/nortrus/Projects/ai-chat-sdk/sdk/build/CMakeFiles/ai_chat_sdk.dir
+/home/nortrus/Projects/ai-chat-sdk/sdk/build/CMakeFiles/test_chat.dir
+/home/nortrus/Projects/ai-chat-sdk/sdk/build/CMakeFiles/cleanlog.dir
+/home/nortrus/Projects/ai-chat-sdk/sdk/build/CMakeFiles/cleanall.dir
+/home/nortrus/Projects/ai-chat-sdk/sdk/build/CMakeFiles/edit_cache.dir
+/home/nortrus/Projects/ai-chat-sdk/sdk/build/CMakeFiles/rebuild_cache.dir
+/home/nortrus/Projects/ai-chat-sdk/sdk/build/CMakeFiles/list_install_components.dir
+/home/nortrus/Projects/ai-chat-sdk/sdk/build/CMakeFiles/install.dir
+/home/nortrus/Projects/ai-chat-sdk/sdk/build/CMakeFiles/install/local.dir
+/home/nortrus/Projects/ai-chat-sdk/sdk/build/CMakeFiles/install/strip.dir
