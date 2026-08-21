@@ -17,7 +17,7 @@ namespace ai_chat_sdk
         : llm_manager_(std::make_unique<LLMManager>()), session_manager_(std::make_unique<SessionManager>())
     {
     }
-    ChatSDK::ChatSDK(std::string db_path = "./chat.db")
+    ChatSDK::ChatSDK(std::string db_path)
         : llm_manager_(std::make_unique<LLMManager>()), session_manager_(std::make_unique<SessionManager>(db_path))
     {
     }
