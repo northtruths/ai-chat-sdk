@@ -137,7 +137,10 @@ namespace mylog
                 if (!data_to_flush.empty() && sinks_snapshot)
                 {
                     for (auto &sink : *sinks_snapshot)
+                    {
                         sink->write(data_to_flush);
+                        sink->flush();
+                    }
                 }
             }
         }
