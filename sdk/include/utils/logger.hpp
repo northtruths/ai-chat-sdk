@@ -56,9 +56,9 @@ namespace mylog
             return logger;
         }
 
-        void set_level(const Level &level)
-        {
-            min_level_.store(level, std::memory_order_release);
+        void set_level(const std::string &level)
+        {  
+            min_level_.store(from_string(level), std::memory_order_release);
         }
 
         void set_formatter(std::unique_ptr<Formatter> fmt)
@@ -91,9 +91,9 @@ namespace mylog
             sinks_.clear();
         }
 
-        void set_danger_level(const Level &lv)
+        void set_danger_level(const std::string &level)
         {
-            danger_level_ = lv;
+            danger_level_ = from_string(level);
         }
 
         void operator()(const Level lv, const char *file, int line, const std::string content)
@@ -113,6 +113,7 @@ namespace mylog
         Logger()
             : min_level_(Level::TRACE), formatter_(make_default_formatter()), transmitter_(make_async_transmitter()), exit_requested_(false)
         {
+            
         }
 
         static void signal_handler(int sig)
