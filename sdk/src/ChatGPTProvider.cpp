@@ -95,7 +95,8 @@ namespace ai_chat_sdk
                 else
                 {
                     // 网络层错误（连接失败、超时等）
-                    LOG_ERROR("(ChatGPT) 信息发送失败！原因如下：网络连接失败，请检查网络或代理设置");
+                    LOG_ERROR_STREAM() << "(ChatGPT) 信息发送失败！HTTP错误: "
+                                       << httplib::to_string(res.error());
                 }
                 return std::string();
             }
@@ -291,7 +292,8 @@ namespace ai_chat_sdk
             else
             {
                 // 网络层错误（连接失败、超时等）
-                LOG_ERROR("(ChatGPT) 信息发送失败！原因如下：网络连接失败，请检查网络或代理设置");
+                LOG_ERROR_STREAM() << "(ChatGPT) 信息发送失败！HTTP错误: "
+                                   << httplib::to_string(res.error());
             }
             return std::string();
         }
