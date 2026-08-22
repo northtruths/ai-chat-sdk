@@ -1,0 +1,15 @@
+# ChatServer gflags 配置示例
+# 从项目根目录启动：./bin/AIChatServer
+--host=0.0.0.0
+--port=8080
+--log_level=INFO
+--temperature=0.7
+--max_tokens=2048
+--key_file=Key.json
+--db_path=chat.db
+
+# Ollama 本地模型配置
+--ollama_model_name=deepseek-r1:1.5b
+--ollama_model_desc=Ollama 本地运行的 DeepSeek R1 轻量模型
+--ollama_endpoint=http://localhost:11434
+--ollama_path=/api/chat
