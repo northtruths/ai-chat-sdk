@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 聊天助手</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- 代码高亮样式 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css" />
+</head>
+<body>
+    <div class="app">
+        <!-- ============ 左侧边栏 ============ -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <span class="brand-logo" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                        </svg>
+                    </span>
+                    <span class="brand-name">AI 聊天助手</span>
+                </div>
+                <button id="newChatBtnTop" class="btn-new-chat" title="新建对话">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>新建对话</span>
+                </button>
+            </div>
+
+            <div class="session-list" id="sessionList">
+                <!-- 会话卡片由 JS 动态渲染 -->
+            </div>
+
+            <div class="sidebar-footer">
+                <span class="muted" id="sessionCount">共 0 个会话</span>
+            </div>
+        </aside>
+
+        <!-- ============ 右侧主区域 ============ -->
+        <main class="main">
+            <!-- 欢迎页（默认展示） -->
+            <section class="welcome" id="welcomeView">
+                <div class="welcome-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
+                <p class="welcome-text">选择一个历史对话继续，或创建新的对话，开启您的 AI 之旅</p>
+                <button id="newChatBtnWelcome" class="btn-primary">新建对话</button>
+            </section>
+
+            <!-- 聊天视图（选中/创建会话后展示） -->
+            <section class="chat-view hidden" id="chatView">
+                <header class="chat-header">
+                    <span class="chat-title" id="chatTitle">新的对话</span>
+                    <span class="chat-model-tag" id="chatModelTag"></span>
+                </header>
+
+                <div class="messages" id="messages">
+                    <!-- 消息由 JS 渲染 -->
+                </div>
+
+                <div class="composer">
+                    <div class="composer-inner">
+                        <textarea
+                            id="messageInput"
+                            class="message-input"
+                            rows="1"
+                            maxlength="2000"
+                            placeholder="请输入您的消息...(Enter发送，Shift+Enter换行)"></textarea>
+                        <div class="composer-right">
+                            <button id="sendBtn" class="btn-send" title="发送">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </button>
+                            <span class="char-count"><span id="charCount">0</span>/2000</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ============ 模型选择模态框 ============ -->
+    <div class="modal-mask hidden" id="modelModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>选择模型</h3>
+                <p class="modal-sub">选择本次会话使用的模型</p>
+            </div>
+            <div class="model-grid" id="modelGrid">
+                <!-- 模型卡片由 JS 渲染 -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-ghost" id="modelCancelBtn">取消</button>
+                <button class="btn-primary" id="modelConfirmBtn" disabled>确定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 轻提示 -->
+    <div class="toast hidden" id="toast"></div>
+
+    <!-- markdown 解析 + 代码高亮依赖 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
