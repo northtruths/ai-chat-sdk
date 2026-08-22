@@ -79,8 +79,7 @@ namespace ai_chat_sdk
         client.set_read_timeout(120);      // 给120s返回时间
         // 请求报头
         httplib::Headers headers = {{"Content-Type", "application/json"},
-                                    {"Accept", "application/json"},
-                                    {"Authorization", "Bearer " + config_->get_api_key()}};
+                                    {"Accept", "application/json"}};
         auto res = client.Post(config_->get_path(), headers, send_json_str, "application/json");
 
         // 获取返回信息并解析
@@ -172,7 +171,6 @@ namespace ai_chat_sdk
         client.set_read_timeout(120);      // 给120s返回时间
         // 请求报头
         httplib::Headers headers = {{"Content-Type", "application/json"},
-                                    {"Authorization", "Bearer " + config_->get_api_key()},
                                     {"Accept", "text/event-stream"}};
 
         // 获取返回信息并解析
